@@ -2,8 +2,6 @@
 
 --changeset bob:1
 
-CREATE SCHEMA IF NOT EXISTS cadastro;
-
 create table cadastro.relatorio
 (
     id bigserial,
