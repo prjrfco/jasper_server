@@ -23,7 +23,7 @@ public class Relatorio {
     private byte[] arquivo;
 
     @Column(name = "tipo")
-    private String descricao;
+    private String tipo;
 
     @Column(name = "nome")
     private String nome;
@@ -40,4 +40,7 @@ public class Relatorio {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "updated_at")
     private Date updatedAt;
+
+    public Relatorio() {
+    }
 }

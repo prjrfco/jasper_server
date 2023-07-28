@@ -32,4 +32,7 @@ public class Backend {
 
     @Column(name = "updated_at")
     private OffsetDateTime updatedAt;
+
+    public Backend() {
+    }
 }

@@ -29,4 +29,7 @@ public class Historico {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "created_at")
     private Date createdAt = new Date();
+
+    public Historico() {
+    }
 }
