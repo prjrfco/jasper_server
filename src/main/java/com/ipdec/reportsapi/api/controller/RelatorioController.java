@@ -1,7 +1,9 @@
 package com.ipdec.reportsapi.api.controller;
 
+import com.ipdec.reportsapi.api.dto.RelatorioInputDto;
 import com.ipdec.reportsapi.domain.model.Relatorio;
 import com.ipdec.reportsapi.domain.service.RelatorioService;
+import feign.Body;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,10 +53,11 @@ public class RelatorioController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/exportar/{id}")
     public void exportarPdf(@PathVariable Long id,
+                            @RequestBody RelatorioInputDto dto,
                             HttpServletResponse response) throws IOException {
 
-        service.addParams("P_DESCRICAO", "TESTE Ç;:<>!@#$%¨&*()!");
-        byte[] bytes = service.exportarPDF(id);
+//        service.addParams("P_DESCRICAO", "TESTE Ç;:<>!@#$%¨&*()!");
+        byte[] bytes = service.exportarPDF(id, dto);
         response.setContentType(MediaType.APPLICATION_PDF_VALUE);
         response.setHeader("Content-disposition", "inline; filename=Recibo-" + "teste" + ".pdf");
         response.getOutputStream().write(bytes);

@@ -1,5 +1,6 @@
 package com.ipdec.reportsapi.domain.service;
 
+import com.ipdec.reportsapi.api.dto.RelatorioInputDto;
 import com.ipdec.reportsapi.api.exceptionhandler.exception.EntidadeNaoEncontradaException;
 import com.ipdec.reportsapi.domain.model.Relatorio;
 import com.ipdec.reportsapi.domain.repository.RelatorioRepository;
@@ -38,7 +39,7 @@ public class RelatorioService {
         this.params.put(key, value);
     }
 
-    public byte[] exportarPDF(Long id) throws IOException {
+    public byte[] exportarPDF(Long id, RelatorioInputDto dto) throws IOException {
         byte[] bytes = null;
         Relatorio relatorio = repository.findById(id).orElseThrow(() -> new EntidadeNaoEncontradaException("Relatorio não encontrado"));
 
@@ -49,25 +50,20 @@ public class RelatorioService {
         os.write(relatorio.getArquivo());
         os.close();
 
+        InputStream jasperFile = null;
         try {
-            InputStream jasperFile = new FileInputStream(tempFile);
-            JasperPrint print = JasperFillManager.fillReport(jasperFile, params, new JREmptyDataSource());
+            jasperFile = new FileInputStream(tempFile);
+            JasperPrint print = JasperFillManager.fillReport(jasperFile, dto.getParams(), new JREmptyDataSource());
             bytes = JasperExportManager.exportReportToPdf(print);
-            jasperFile.close();
         } catch (JRException e) {
             e.printStackTrace();
+        } finally {
+            if (jasperFile != null) jasperFile.close();
+            FileUtils.forceDelete(tempFile);
+            FileUtils.deleteDirectory(tempDirectory.toFile());
         }
-
-        FileUtils.forceDelete(tempFile);
-        FileUtils.deleteDirectory(tempDirectory.toFile());
-
         return bytes;
     }
-
-//    Convert the string into an input stream…
-//    Use JasperCompileManager.compileReportToStrem(input, output)
-//    Convert the output stream to a string (compiledOutput)
-//    Save compiledOutput to the database in column compiled_output…
 
     public Relatorio create(MultipartFile file) throws IOException {
         String fileName = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
