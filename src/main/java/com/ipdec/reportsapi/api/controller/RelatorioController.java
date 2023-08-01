@@ -3,7 +3,6 @@ package com.ipdec.reportsapi.api.controller;
 import com.ipdec.reportsapi.api.dto.RelatorioInputDto;
 import com.ipdec.reportsapi.domain.model.Relatorio;
 import com.ipdec.reportsapi.domain.service.RelatorioService;
-import feign.Body;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.Base64;
 import java.util.List;
 
 @RestController
@@ -56,7 +54,6 @@ public class RelatorioController {
                             @RequestBody RelatorioInputDto dto,
                             HttpServletResponse response) throws IOException {
 
-//        service.addParams("P_DESCRICAO", "TESTE Ç;:<>!@#$%¨&*()!");
         byte[] bytes = service.exportarPDF(id, dto);
         response.setContentType(MediaType.APPLICATION_PDF_VALUE);
         response.setHeader("Content-disposition", "inline; filename=Recibo-" + "teste" + ".pdf");

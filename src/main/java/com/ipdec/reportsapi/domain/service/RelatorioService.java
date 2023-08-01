@@ -5,7 +5,10 @@ import com.ipdec.reportsapi.api.exceptionhandler.exception.EntidadeNaoEncontrada
 import com.ipdec.reportsapi.domain.model.Relatorio;
 import com.ipdec.reportsapi.domain.repository.RelatorioRepository;
 import jakarta.servlet.ServletContext;
-import net.sf.jasperreports.engine.*;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperExportManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,6 +61,7 @@ public class RelatorioService {
             JasperPrint print = JasperFillManager.fillReport(jasperFile, dto.getParams(), new JRBeanCollectionDataSource(dto.getParameter_list()));
             bytes = JasperExportManager.exportReportToPdf(print);
         } catch (JRException e) {
+            jasperFile.close();
             e.printStackTrace();
         } finally {
             if (jasperFile != null) jasperFile.close();
