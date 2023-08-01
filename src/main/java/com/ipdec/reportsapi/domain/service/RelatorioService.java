@@ -6,6 +6,7 @@ import com.ipdec.reportsapi.domain.model.Relatorio;
 import com.ipdec.reportsapi.domain.repository.RelatorioRepository;
 import jakarta.servlet.ServletContext;
 import net.sf.jasperreports.engine.*;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -53,7 +54,8 @@ public class RelatorioService {
         InputStream jasperFile = null;
         try {
             jasperFile = new FileInputStream(tempFile);
-            JasperPrint print = JasperFillManager.fillReport(jasperFile, dto.getParams(), new JREmptyDataSource());
+//            JasperPrint print = JasperFillManager.fillReport(jasperFile, dto.getParams(), new JREmptyDataSource());
+            JasperPrint print = JasperFillManager.fillReport(jasperFile, dto.getParams(), new JRBeanCollectionDataSource(dto.getParameter_list()));
             bytes = JasperExportManager.exportReportToPdf(print);
         } catch (JRException e) {
             e.printStackTrace();
