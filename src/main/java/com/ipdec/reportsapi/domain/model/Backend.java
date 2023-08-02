@@ -3,8 +3,11 @@ package com.ipdec.reportsapi.domain.model;
 import com.ipdec.reportsapi.api.dto.BackendInputDto;
 import jakarta.persistence.*;
 import lombok.Data;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.time.OffsetDateTime;
+import java.util.Date;
+import java.util.UUID;
 
 
 @Entity
@@ -14,7 +17,7 @@ public class Backend {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private UUID id;
 
     @Column(name = "nome")
     private String nome;
@@ -29,10 +32,10 @@ public class Backend {
     private String token;
 
     @Column(name = "created_at")
-    private OffsetDateTime createdAt;
+    private Date createdAt;
 
     @Column(name = "updated_at")
-    private OffsetDateTime updatedAt;
+    private Date updatedAt;
 
     public Backend() {
     }
@@ -41,6 +44,7 @@ public class Backend {
         this.nome = dto.getNome();
         this.descricao = dto.getDescricao();
         this.url = dto.getUrl();
-        this.token = dto.getToken();
+        this.token = new BCryptPasswordEncoder().encode(dto.getToken());
+        this.createdAt = new Date();
     }
 }

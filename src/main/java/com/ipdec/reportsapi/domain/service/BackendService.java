@@ -1,5 +1,6 @@
 package com.ipdec.reportsapi.domain.service;
 
+import com.ipdec.reportsapi.api.dto.BackendDto;
 import com.ipdec.reportsapi.api.dto.BackendInputDto;
 import com.ipdec.reportsapi.api.exceptionhandler.exception.EntidadeNaoEncontradaException;
 import com.ipdec.reportsapi.domain.model.Backend;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -16,38 +18,42 @@ public class BackendService {
     @Autowired
     private BackendRepository repository;
 
-    public List<Backend> listar() {
+    public List<BackendDto> listar() {
         List<Backend> lista = repository.findAll();
-        return lista;
+
+        return lista.stream().map(BackendDto::new).toList();
     }
 
-    public Backend buscar(Long id) {
+    public BackendDto buscar(Long id) {
         Backend backend = repository.findById(id).orElseThrow(() -> new EntidadeNaoEncontradaException("Backend não encontrado"));
-        return backend;
+
+        return new BackendDto(backend);
     }
 
     @Transactional
-    public Backend criar(BackendInputDto dto) {
+    public BackendDto adicionar(BackendInputDto dto) {
         Backend backend = new Backend(dto);
+
         backend = repository.save(backend);
-        return backend;
+        return new BackendDto(backend);
     }
 
     @Transactional
-    public Backend atualizar(BackendInputDto dto, Long id) {
+    public BackendDto atualizar(BackendInputDto dto, Long id) {
         Backend backend = repository.findById(id).orElseThrow(() -> new EntidadeNaoEncontradaException("Backend não encontrado"));
 
         backend.setNome(dto.getNome());
         backend.setDescricao(dto.getDescricao());
         backend.setUrl(dto.getUrl());
         backend.setToken(dto.getToken());
+        backend.setUpdatedAt(new Date());
 
         backend = repository.save(backend);
-        return backend;
+        return new BackendDto(backend);
     }
 
     @Transactional
-    public void deletar(BackendInputDto dto, Long id) {
+    public void deletar(Long id) {
         Backend backend = repository.findById(id).orElseThrow(() -> new EntidadeNaoEncontradaException("Backend não encontrado"));
 
         repository.delete(backend);
