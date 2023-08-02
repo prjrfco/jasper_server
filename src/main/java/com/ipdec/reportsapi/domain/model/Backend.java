@@ -1,5 +1,6 @@
 package com.ipdec.reportsapi.domain.model;
 
+import com.ipdec.reportsapi.api.dto.BackendInputDto;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -34,5 +35,12 @@ public class Backend {
     private OffsetDateTime updatedAt;
 
     public Backend() {
+    }
+
+    public Backend(BackendInputDto dto) {
+        this.nome = dto.getNome();
+        this.descricao = dto.getDescricao();
+        this.url = dto.getUrl();
+        this.token = dto.getToken();
     }
 }
