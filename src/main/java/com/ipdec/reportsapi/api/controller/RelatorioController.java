@@ -2,7 +2,6 @@ package com.ipdec.reportsapi.api.controller;
 
 import com.ipdec.reportsapi.api.dto.RelatorioDto;
 import com.ipdec.reportsapi.api.dto.RelatorioInputDto;
-import com.ipdec.reportsapi.domain.model.Relatorio;
 import com.ipdec.reportsapi.domain.service.RelatorioService;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,10 +41,10 @@ public class RelatorioController {
     }
 
     @PutMapping("/{relatorioId}")
-    public ResponseEntity<Relatorio> atualizar(@PathVariable UUID backendId,
-                                               @PathVariable UUID relatorioId,
-                                               @RequestParam("file") MultipartFile file) {
-        return null;
+    public RelatorioDto atualizar(@PathVariable UUID backendId,
+                                  @PathVariable UUID relatorioId,
+                                  @RequestParam("file") MultipartFile file) throws IOException {
+        return service.atualizar(backendId, relatorioId, file);
     }
 
     @DeleteMapping("/{id}")

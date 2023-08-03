@@ -36,7 +36,7 @@ public class Relatorio {
     @Column(name = "versao")
     private Integer versao;
 
-    @OneToMany(mappedBy = "relatorio")
+    @OneToMany(mappedBy = "relatorio", cascade = CascadeType.ALL)
     private List<Historico> historico = new ArrayList<>();
 
     @CreationTimestamp

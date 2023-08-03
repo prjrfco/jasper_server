@@ -4,6 +4,7 @@ import com.ipdec.reportsapi.api.dto.RelatorioDto;
 import com.ipdec.reportsapi.api.dto.RelatorioInputDto;
 import com.ipdec.reportsapi.api.exceptionhandler.exception.EntidadeNaoEncontradaException;
 import com.ipdec.reportsapi.domain.model.Backend;
+import com.ipdec.reportsapi.domain.model.Historico;
 import com.ipdec.reportsapi.domain.model.Relatorio;
 import com.ipdec.reportsapi.domain.repository.BackendRepository;
 import com.ipdec.reportsapi.domain.repository.RelatorioRepository;
@@ -22,6 +23,7 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -46,8 +48,8 @@ public class RelatorioService {
     }
 
     public RelatorioDto buscar(UUID backendId, UUID relatorioId) {
-        Relatorio relatorio = repository.findByIdAndAndBackend_Id(relatorioId, backendId
-        ).orElseThrow(() -> new EntidadeNaoEncontradaException("Relatório não encontrado"));
+        Relatorio relatorio = repository.findByIdAndAndBackend_Id(relatorioId, backendId)
+                .orElseThrow(() -> new EntidadeNaoEncontradaException("Relatório não encontrado"));
 
         return new RelatorioDto(relatorio);
     }
@@ -64,6 +66,23 @@ public class RelatorioService {
         relatorio.setTipo(file.getContentType());
         relatorio.setBackend(backend);
         relatorio.setVersao(1);
+
+        return new RelatorioDto(repository.save(relatorio));
+    }
+
+    public RelatorioDto atualizar(UUID backendId, UUID relatorioId, MultipartFile file) throws IOException {
+        Relatorio relatorio = repository.findByIdAndAndBackend_Id(relatorioId, backendId
+        ).orElseThrow(() -> new EntidadeNaoEncontradaException("Relatório não encontrado"));
+
+        Historico historico = new Historico(relatorio);
+        relatorio.getHistorico().add(historico);
+
+        String fileName = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
+        relatorio.setNome(fileName);
+        relatorio.setArquivo(file.getBytes());
+        relatorio.setTipo(file.getContentType());
+        relatorio.setVersao(relatorio.getVersao() + 1);
+        relatorio.setAtualizadoEm(new Date());
 
         return new RelatorioDto(repository.save(relatorio));
     }

@@ -39,4 +39,13 @@ public class Historico {
 
     public Historico() {
     }
+
+    public Historico(Relatorio relatorio) {
+        this.relatorio = relatorio;
+        this.arquivo = relatorio.getArquivo();
+        this.tipo = relatorio.getTipo();
+        this.nome = relatorio.getNome();
+        this.versao = relatorio.getVersao();
+        this.criadoEm = new Date();
+    }
 }
