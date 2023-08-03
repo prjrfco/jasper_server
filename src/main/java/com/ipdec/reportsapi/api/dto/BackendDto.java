@@ -1,5 +1,6 @@
 package com.ipdec.reportsapi.api.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.ipdec.reportsapi.domain.model.Backend;
 import lombok.Data;
 
@@ -7,6 +8,7 @@ import java.util.Date;
 import java.util.UUID;
 
 @Data
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class BackendDto {
 
     private UUID id;
@@ -19,9 +21,9 @@ public class BackendDto {
 
     private String token;
 
-    private Date createdAt;
+    private Date criadoEm;
 
-    private Date updatedAt;
+    private Date atualizadoEm;
 
     public BackendDto() {
     }
@@ -32,7 +34,7 @@ public class BackendDto {
         this.descricao = backend.getDescricao();
         this.url = backend.getUrl();
         this.token = backend.getToken();
-        this.createdAt = backend.getCreatedAt();
-        this.updatedAt = backend.getUpdatedAt();
+        this.criadoEm = backend.getCriadoEm();
+        this.atualizadoEm = backend.getAtualizadoEm();
     }
 }

@@ -20,6 +20,10 @@ public class Relatorio {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private UUID id;
 
+    @ManyToOne
+    @JoinColumn(name = "backend_id")
+    private Backend backend;
+
     @Column(name = "arquivo")
     private byte[] arquivo;
 
@@ -29,18 +33,21 @@ public class Relatorio {
     @Column(name = "nome")
     private String nome;
 
+    @Column(name = "versao")
+    private Integer versao;
+
     @OneToMany(mappedBy = "relatorio")
-    private List<Historico> historicos = new ArrayList<>();
+    private List<Historico> historico = new ArrayList<>();
 
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "created_at")
-    private Date createdAt = new Date();
+    @Column(name = "criado_em")
+    private Date criadoEm = new Date();
 
     @UpdateTimestamp
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "updated_at")
-    private Date updatedAt;
+    @Column(name = "atualizado_em")
+    private Date atualizadoEm;
 
     public Relatorio() {
     }

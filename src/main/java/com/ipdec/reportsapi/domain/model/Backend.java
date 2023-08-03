@@ -6,7 +6,9 @@ import lombok.Data;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 
@@ -31,11 +33,14 @@ public class Backend {
     @Column(name = "token")
     private String token;
 
-    @Column(name = "created_at")
-    private Date createdAt;
+    @OneToMany(mappedBy = "backend")
+    private List<Relatorio> relatorios = new ArrayList<>();
 
-    @Column(name = "updated_at")
-    private Date updatedAt;
+    @Column(name = "criado_em")
+    private Date criadoEm;
+
+    @Column(name = "atualizado_em")
+    private Date atualizadoEm;
 
     public Backend() {
     }
@@ -45,6 +50,6 @@ public class Backend {
         this.descricao = dto.getDescricao();
         this.url = dto.getUrl();
         this.token = new BCryptPasswordEncoder().encode(dto.getToken());
-        this.createdAt = new Date();
+        this.criadoEm = new Date();
     }
 }

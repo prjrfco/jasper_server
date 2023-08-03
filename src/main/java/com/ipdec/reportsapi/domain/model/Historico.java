@@ -20,16 +20,22 @@ public class Historico {
     @JoinColumn(name = "relatorio_id")
     private Relatorio relatorio;
 
+    @Column(name = "arquivo")
+    private byte[] arquivo;
+
     @Column(name = "tipo")
-    private String descricao;
+    private String tipo;
 
     @Column(name = "nome")
     private String nome;
 
+    @Column(name = "versao")
+    private Integer versao;
+
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "created_at")
-    private Date createdAt = new Date();
+    @Column(name = "criado_em")
+    private Date criadoEm = new Date();
 
     public Historico() {
     }

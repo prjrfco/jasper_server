@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class BackendService {
@@ -24,8 +25,9 @@ public class BackendService {
         return lista.stream().map(BackendDto::new).toList();
     }
 
-    public BackendDto buscar(Long id) {
-        Backend backend = repository.findById(id).orElseThrow(() -> new EntidadeNaoEncontradaException("Backend não encontrado"));
+    public BackendDto buscar(UUID id) {
+        Backend backend = repository.findById(id)
+                .orElseThrow(() -> new EntidadeNaoEncontradaException("Backend não encontrado"));
 
         return new BackendDto(backend);
     }
@@ -39,22 +41,24 @@ public class BackendService {
     }
 
     @Transactional
-    public BackendDto atualizar(BackendInputDto dto, Long id) {
-        Backend backend = repository.findById(id).orElseThrow(() -> new EntidadeNaoEncontradaException("Backend não encontrado"));
+    public BackendDto atualizar(BackendInputDto dto, UUID id) {
+        Backend backend = repository.findById(id)
+                .orElseThrow(() -> new EntidadeNaoEncontradaException("Backend não encontrado"));
 
         backend.setNome(dto.getNome());
         backend.setDescricao(dto.getDescricao());
         backend.setUrl(dto.getUrl());
         backend.setToken(dto.getToken());
-        backend.setUpdatedAt(new Date());
+        backend.setAtualizadoEm(new Date());
 
         backend = repository.save(backend);
         return new BackendDto(backend);
     }
 
     @Transactional
-    public void deletar(Long id) {
-        Backend backend = repository.findById(id).orElseThrow(() -> new EntidadeNaoEncontradaException("Backend não encontrado"));
+    public void deletar(UUID id) {
+        Backend backend = repository.findById(id)
+                .orElseThrow(() -> new EntidadeNaoEncontradaException("Backend não encontrado"));
 
         repository.delete(backend);
     }

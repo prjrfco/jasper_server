@@ -1,11 +1,16 @@
 package com.ipdec.reportsapi.domain.service;
 
+import com.ipdec.reportsapi.api.dto.RelatorioDto;
 import com.ipdec.reportsapi.api.dto.RelatorioInputDto;
 import com.ipdec.reportsapi.api.exceptionhandler.exception.EntidadeNaoEncontradaException;
+import com.ipdec.reportsapi.domain.model.Backend;
 import com.ipdec.reportsapi.domain.model.Relatorio;
+import com.ipdec.reportsapi.domain.repository.BackendRepository;
 import com.ipdec.reportsapi.domain.repository.RelatorioRepository;
-import jakarta.servlet.ServletContext;
-import net.sf.jasperreports.engine.*;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperExportManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,9 +22,9 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 @Service
 public class RelatorioService {
@@ -28,21 +33,45 @@ public class RelatorioService {
     private RelatorioRepository repository;
 
     @Autowired
-    ServletContext context;
+    private BackendRepository backendRepository;
 
     private static final String JASPER_DIRETORIO = "temp";
     private static final String JASPER_PREFIXO = "relatorio_";
     private static final String JASPER_SUFIXO = ".jasper";
 
-    private Map<String, Object> params = new HashMap<>();
+    public List<RelatorioDto> listar(UUID id) {
+        List<Relatorio> lista = repository.findAllByBackendId(id);
 
-    public void addParams(String key, Object value) {
-        this.params.put(key, value);
+        return lista.stream().map(RelatorioDto::new).toList();
     }
 
-    public byte[] exportarPDF(Long id, RelatorioInputDto dto) throws IOException {
+    public RelatorioDto buscar(UUID backendId, UUID relatorioId) {
+        Relatorio relatorio = repository.findByIdAndAndBackend_Id(relatorioId, backendId
+        ).orElseThrow(() -> new EntidadeNaoEncontradaException("Relatório não encontrado"));
+
+        return new RelatorioDto(relatorio);
+    }
+
+    public RelatorioDto create(MultipartFile file, UUID backendId) throws IOException {
+        Backend backend = backendRepository.findById(backendId)
+                .orElseThrow(() -> new EntidadeNaoEncontradaException("Backend não encontrado"));
+
+        String fileName = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
+
+        Relatorio relatorio = new Relatorio();
+        relatorio.setNome(fileName);
+        relatorio.setArquivo(file.getBytes());
+        relatorio.setTipo(file.getContentType());
+        relatorio.setBackend(backend);
+        relatorio.setVersao(1);
+
+        return new RelatorioDto(repository.save(relatorio));
+    }
+
+    public byte[] exportarPDF(UUID backendId, UUID relatorioId, RelatorioInputDto dto) throws IOException {
         byte[] bytes = null;
-        Relatorio relatorio = repository.findById(id).orElseThrow(() -> new EntidadeNaoEncontradaException("Relatorio não encontrado"));
+        Relatorio relatorio = repository.findByIdAndAndBackend_Id(relatorioId, backendId)
+                .orElseThrow(() -> new EntidadeNaoEncontradaException("Relatorio não encontrado"));
 
         Path tempDirectory = Files.createTempDirectory(Paths.get("target"), JASPER_DIRETORIO);
 
@@ -72,20 +101,4 @@ public class RelatorioService {
         return bytes;
     }
 
-    public Relatorio create(MultipartFile file) throws IOException {
-        String fileName = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
-
-        Relatorio relatorio = new Relatorio();
-        relatorio.setNome(fileName);
-        relatorio.setArquivo(file.getBytes());
-        relatorio.setTipo(file.getContentType());
-
-        return repository.save(relatorio);
-    }
-
-    public Relatorio buscar(Long id) throws IOException {
-        Relatorio relatorio = repository.findById(id).orElseThrow(() -> new EntidadeNaoEncontradaException("Relatório não encontrado"));
-
-        return repository.save(relatorio);
-    }
 }

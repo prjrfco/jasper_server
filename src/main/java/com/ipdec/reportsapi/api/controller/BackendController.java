@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/backend")
@@ -25,7 +26,7 @@ public class BackendController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<BackendDto> buscar(@PathVariable Long id) {
+    public ResponseEntity<BackendDto> buscar(@PathVariable UUID id) {
         BackendDto dto = service.buscar(id);
         return ResponseEntity.ok(dto);
     }
@@ -37,14 +38,14 @@ public class BackendController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<BackendDto> atualizar(@PathVariable Long id, @Valid @RequestBody BackendInputDto dto) {
+    public ResponseEntity<BackendDto> atualizar(@PathVariable UUID id, @Valid @RequestBody BackendInputDto dto) {
         BackendDto result = service.atualizar(dto, id);
         return ResponseEntity.ok(result);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void remover(@PathVariable Long id) {
+    public void remover(@PathVariable UUID id) {
         service.deletar(id);
     }
 }
