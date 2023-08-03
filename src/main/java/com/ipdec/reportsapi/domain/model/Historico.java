@@ -46,6 +46,6 @@ public class Historico {
         this.tipo = relatorio.getTipo();
         this.nome = relatorio.getNome();
         this.versao = relatorio.getVersao();
-        this.criadoEm = new Date();
+        this.criadoEm = relatorio.getAtualizadoEm();
     }
 }

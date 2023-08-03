@@ -1,5 +1,6 @@
 package com.ipdec.reportsapi.api.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.ipdec.reportsapi.domain.model.Relatorio;
 import lombok.Data;
@@ -23,8 +24,10 @@ public class RelatorioDto {
 
     private List<HistoricoDto> historico = new ArrayList<>();
 
+    @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
     private Date criadoEm;
 
+    @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
     private Date atualizadoEm;
 
     public RelatorioDto() {

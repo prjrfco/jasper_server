@@ -47,7 +47,7 @@ public class RelatorioController {
         return service.atualizar(backendId, relatorioId, file);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{relatorioId}")
     public ResponseEntity<Void> remover(@PathVariable UUID id) {
         return null;
     }

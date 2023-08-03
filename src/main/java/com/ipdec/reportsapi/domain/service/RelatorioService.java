@@ -74,6 +74,7 @@ public class RelatorioService {
         Relatorio relatorio = repository.findByIdAndAndBackend_Id(relatorioId, backendId
         ).orElseThrow(() -> new EntidadeNaoEncontradaException("Relatório não encontrado"));
 
+        relatorio.setAtualizadoEm(new Date());
         Historico historico = new Historico(relatorio);
         relatorio.getHistorico().add(historico);
 
@@ -82,7 +83,6 @@ public class RelatorioService {
         relatorio.setArquivo(file.getBytes());
         relatorio.setTipo(file.getContentType());
         relatorio.setVersao(relatorio.getVersao() + 1);
-        relatorio.setAtualizadoEm(new Date());
 
         return new RelatorioDto(repository.save(relatorio));
     }
