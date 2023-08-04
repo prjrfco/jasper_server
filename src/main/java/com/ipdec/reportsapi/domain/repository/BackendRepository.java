@@ -11,4 +11,6 @@ import java.util.UUID;
 public interface BackendRepository extends JpaRepository<Backend, Long> {
 
     Optional<Backend> findById(UUID backendId);
+
+    Optional<Backend> findByNome(String nome);
 }

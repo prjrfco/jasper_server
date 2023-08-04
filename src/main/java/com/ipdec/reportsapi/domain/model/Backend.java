@@ -5,7 +5,6 @@ import jakarta.persistence.*;
 import lombok.Data;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -30,8 +29,8 @@ public class Backend {
     @Column(name = "url")
     private String url;
 
-    @Column(name = "token")
-    private String token;
+    @Column(name = "senha")
+    private String senha;
 
     @OneToMany(mappedBy = "backend")
     private List<Relatorio> relatorios = new ArrayList<>();
@@ -49,7 +48,7 @@ public class Backend {
         this.nome = dto.getNome();
         this.descricao = dto.getDescricao();
         this.url = dto.getUrl();
-        this.token = new BCryptPasswordEncoder().encode(dto.getToken());
+        this.senha = new BCryptPasswordEncoder().encode(dto.getSenha());
         this.criadoEm = new Date();
     }
 }

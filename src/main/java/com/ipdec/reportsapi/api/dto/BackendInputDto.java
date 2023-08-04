@@ -11,6 +11,6 @@ public class BackendInputDto {
 
     private String url;
 
-    private String token;
+    private String senha;
 
 }

@@ -1,5 +1,6 @@
 package com.ipdec.reportsapi.api.exceptionhandler;
 
+import com.ipdec.reportsapi.api.exceptionhandler.exception.AutenticacaoException;
 import com.ipdec.reportsapi.api.exceptionhandler.exception.EntidadeNaoEncontradaException;
 import com.ipdec.reportsapi.api.exceptionhandler.exception.NegocioException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +41,18 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(NegocioException.class)
     public ResponseEntity<Object> handlerNegocio(NegocioException ex, WebRequest request) {
         var status = HttpStatus.BAD_REQUEST;
+
+        var problema = new Problema();
+        problema.setStatus(status.value());
+        problema.setTitulo(ex.getMessage());
+        problema.setDataHora(OffsetDateTime.now().withNano(0));
+
+        return super.handleExceptionInternal(ex, problema, new HttpHeaders(), status, request);
+    }
+
+    @ExceptionHandler(AutenticacaoException.class)
+    public ResponseEntity<Object> handlerAutenticacao(AutenticacaoException ex, WebRequest request) {
+        var status = HttpStatus.UNAUTHORIZED;
 
         var problema = new Problema();
         problema.setStatus(status.value());

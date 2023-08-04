@@ -48,7 +48,7 @@ public class BackendService {
         backend.setNome(dto.getNome());
         backend.setDescricao(dto.getDescricao());
         backend.setUrl(dto.getUrl());
-        backend.setToken(dto.getToken());
+        backend.setSenha(dto.getSenha());
         backend.setAtualizadoEm(new Date());
 
         backend = repository.save(backend);

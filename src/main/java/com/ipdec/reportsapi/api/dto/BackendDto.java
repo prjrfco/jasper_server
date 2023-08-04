@@ -20,7 +20,7 @@ public class BackendDto {
 
     private String url;
 
-    private String token;
+    private String senha;
 
     @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
     private Date criadoEm;
@@ -36,7 +36,7 @@ public class BackendDto {
         this.nome = backend.getNome();
         this.descricao = backend.getDescricao();
         this.url = backend.getUrl();
-        this.token = backend.getToken();
+        this.senha = backend.getSenha();
         this.criadoEm = backend.getCriadoEm();
         this.atualizadoEm = backend.getAtualizadoEm();
     }
