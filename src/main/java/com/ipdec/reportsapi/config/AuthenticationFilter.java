@@ -13,6 +13,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
 public class AuthenticationFilter extends OncePerRequestFilter {
@@ -21,22 +23,32 @@ public class AuthenticationFilter extends OncePerRequestFilter {
     @Autowired
     private BackendRepository backendRepository;
 
+
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
+    protected void doFilterInternal(HttpServletRequest request,
+                                    HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
+
+        String uri = request.getRequestURI();
+        List<String> controllersFilter = new ArrayList<>();
+        controllersFilter.add("/teste");
+
         String nome = request.getHeader("user");
         String senha = request.getHeader("password");
-        if (nome == null || senha == null) {
-            throw new AutenticacaoException("Não autenticado");
-        } else {
-            Backend backend = backendRepository.findByNome(nome)
-                    .orElseThrow(() -> new AutenticacaoException("Não autenticado"));
-            if (!new BCryptPasswordEncoder().matches(senha, backend.getSenha())) {
+
+        if (controllersFilter.contains(uri)) {
+            if (nome == null || senha == null) {
                 throw new AutenticacaoException("Não autenticado");
+            } else {
+                Backend backend = backendRepository.findByNome(nome)
+                        .orElseThrow(() -> new AutenticacaoException("Não autenticado"));
+                if (!new BCryptPasswordEncoder().matches(senha, backend.getSenha())) {
+                    throw new AutenticacaoException("Não autenticado");
+                }
             }
         }
-        logger.info("Successfully authenticated user  " +
-                nome);
+
+
         filterChain.doFilter(request, response);
     }
 

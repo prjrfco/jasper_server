@@ -9,7 +9,7 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 create table cadastro.backend
 (
     id            UUID                           DEFAULT uuid_generate_v4(),
-    nome          varchar(100) not null,
+    nome          varchar(100) not null unique,
     descricao     text         not null,
     url           varchar(100) not null,
     senha         varchar(100) not null,
