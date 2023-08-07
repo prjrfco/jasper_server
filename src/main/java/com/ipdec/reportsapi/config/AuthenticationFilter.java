@@ -31,7 +31,7 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 
         String uri = request.getRequestURI();
         List<String> controllersFilter = new ArrayList<>();
-        controllersFilter.add("/teste");
+        controllersFilter.add("/jasper/**");
 
         String nome = request.getHeader("user");
         String senha = request.getHeader("password");

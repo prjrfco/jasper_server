@@ -4,6 +4,7 @@ import com.ipdec.reportsapi.api.dto.RelatorioDto;
 import com.ipdec.reportsapi.api.dto.RelatorioInputDto;
 import com.ipdec.reportsapi.domain.service.RelatorioService;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.websocket.server.PathParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -16,32 +17,32 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/backend/{backendId}/relatorio")
+@RequestMapping("/relatorio")
 public class RelatorioController {
 
     @Autowired
     private RelatorioService service;
 
     @GetMapping
-    public List<RelatorioDto> listar(@PathVariable UUID backendId) {
+    public List<RelatorioDto> listar(@RequestParam UUID backendId) {
         return service.listar(backendId);
     }
 
     @GetMapping("/{relatorioId}")
-    public RelatorioDto buscar(@PathVariable UUID backendId,
+    public RelatorioDto buscar(@RequestParam UUID backendId,
                                @PathVariable UUID relatorioId) {
         return service.buscar(backendId, relatorioId);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public RelatorioDto adicionar(@PathVariable UUID backendId,
+    public RelatorioDto adicionar(@RequestParam UUID backendId,
                                   @RequestParam("file") MultipartFile file) throws IOException {
         return service.create(file, backendId);
     }
 
     @PutMapping("/{relatorioId}")
-    public RelatorioDto atualizar(@PathVariable UUID backendId,
+    public RelatorioDto atualizar(@RequestParam UUID backendId,
                                   @PathVariable UUID relatorioId,
                                   @RequestParam("file") MultipartFile file) throws IOException {
         return service.atualizar(backendId, relatorioId, file);
@@ -50,17 +51,5 @@ public class RelatorioController {
     @DeleteMapping("/{relatorioId}")
     public ResponseEntity<Void> remover(@PathVariable UUID id) {
         return null;
-    }
-
-    @RequestMapping(method = RequestMethod.GET, value = "/exportar/{relatorioId}")
-    public void exportarPdf(@PathVariable UUID backendId,
-                            @PathVariable UUID relatorioId,
-                            @RequestBody RelatorioInputDto dto,
-                            HttpServletResponse response) throws IOException {
-
-        byte[] bytes = service.exportarPDF(backendId, relatorioId, dto);
-        response.setContentType(MediaType.APPLICATION_PDF_VALUE);
-        response.setHeader("Content-disposition", "inline; filename=Recibo-" + "teste" + ".pdf");
-        response.getOutputStream().write(bytes);
     }
 }
