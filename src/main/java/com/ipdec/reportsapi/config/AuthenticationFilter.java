@@ -31,12 +31,14 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 
         String uri = request.getRequestURI();
         List<String> controllersFilter = new ArrayList<>();
-        controllersFilter.add("/jasper/**");
+        controllersFilter.add("/jasper");
+
+        String controllerJasper = "/jasper";
 
         String nome = request.getHeader("user");
         String senha = request.getHeader("password");
 
-        if (controllersFilter.contains(uri)) {
+        if (uri.startsWith(controllerJasper)) {
             if (nome == null || senha == null) {
                 throw new AutenticacaoException("Não autenticado");
             } else {

@@ -17,7 +17,7 @@ public class JasperController {
     @Autowired
     private JasperService service;
 
-    @RequestMapping(method = RequestMethod.GET, value = "/{relatorioId}")
+    @RequestMapping(method = RequestMethod.POST, value = "/{relatorioId}")
     public void exportarPdf(@RequestHeader String user,
                             @PathVariable UUID relatorioId,
                             @RequestBody RelatorioInputDto dto,
