@@ -8,6 +8,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.Base64;
 import java.util.UUID;
 
 @RestController
@@ -18,14 +19,16 @@ public class JasperController {
     private JasperService service;
 
     @RequestMapping(method = RequestMethod.POST, value = "/{relatorioId}")
-    public void exportarPdf(@RequestHeader String user,
-                            @PathVariable UUID relatorioId,
-                            @RequestBody RelatorioInputDto dto,
-                            HttpServletResponse response) throws IOException {
+    public String exportarPdf(@RequestHeader String user,
+                              @PathVariable UUID relatorioId,
+                              @RequestBody RelatorioInputDto dto,
+                              HttpServletResponse response) throws IOException {
 
         byte[] bytes = service.exportarPDF(user, relatorioId, dto);
-        response.setContentType(MediaType.APPLICATION_PDF_VALUE);
-        response.setHeader("Content-disposition", "inline; filename=Recibo-" + "teste" + ".pdf");
-        response.getOutputStream().write(bytes);
+//        response.setContentType(MediaType.APPLICATION_PDF_VALUE);
+//        response.setHeader("Content-disposition", "inline; filename=Recibo-" + "teste" + ".pdf");
+//        response.getOutputStream().write(bytes);
+        byte[] encodedBytes = Base64.getEncoder().encode(bytes);
+        return new String(encodedBytes);
     }
 }
