@@ -19,6 +19,6 @@ create table cadastro.backend
 );
 
 insert into cadastro.backend
-values (default, 'balandrau', 'API de gerenciamento marçônico balandrau', 'http://localhost:8081/reports-api',
+values (default, 'balandrau', 'API de gerenciamento marçônico balandrau', 'http://localhost:8081/relatorios',
         '$2a$12$d7BerEyoctDTdugqhareC.ifjwUU3smFZWxKWHuZGLQICrDnerGdK', default,
         null);

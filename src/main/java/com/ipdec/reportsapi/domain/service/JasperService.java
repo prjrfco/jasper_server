@@ -4,10 +4,7 @@ import com.ipdec.reportsapi.api.dto.RelatorioInputDto;
 import com.ipdec.reportsapi.api.exceptionhandler.exception.EntidadeNaoEncontradaException;
 import com.ipdec.reportsapi.domain.model.Relatorio;
 import com.ipdec.reportsapi.domain.repository.RelatorioRepository;
-import net.sf.jasperreports.engine.JRException;
-import net.sf.jasperreports.engine.JasperExportManager;
-import net.sf.jasperreports.engine.JasperFillManager;
-import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,15 +41,16 @@ public class JasperService {
         InputStream jasperFile = null;
         try {
             jasperFile = new FileInputStream(tempFile);
+            JasperPrint print;
 
-//            JasperPrint print = JasperFillManager.fillReport(jasperFile, dto.getParams(), new JREmptyDataSource());
-
-            JasperPrint print = JasperFillManager.fillReport(jasperFile, dto.getParams(), new JRBeanCollectionDataSource(dto.getParameter_list()));
-
+            if (dto.getParameter_list().size() > 0) {
+                print = JasperFillManager.fillReport(jasperFile, dto.getParams(), new JRBeanCollectionDataSource(dto.getParameter_list()));
+            } else {
+                print = JasperFillManager.fillReport(jasperFile, dto.getParams(), new JREmptyDataSource());
+            }
 
             bytes = JasperExportManager.exportReportToPdf(print);
         } catch (JRException e) {
-            jasperFile.close();
             e.printStackTrace();
         } finally {
             if (jasperFile != null) jasperFile.close();
