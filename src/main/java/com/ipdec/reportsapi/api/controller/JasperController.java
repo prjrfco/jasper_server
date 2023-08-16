@@ -22,7 +22,7 @@ public class JasperController {
     public String exportarPdf(@RequestHeader String user,
                               @PathVariable UUID relatorioId,
                               @RequestBody RelatorioInputDto dto,
-                              HttpServletResponse response) throws IOException {
+                              HttpServletResponse response) throws IOException, IllegalAccessException {
 
         byte[] bytes = service.exportarPDF(user, relatorioId, dto);
 //        response.setContentType(MediaType.APPLICATION_PDF_VALUE);

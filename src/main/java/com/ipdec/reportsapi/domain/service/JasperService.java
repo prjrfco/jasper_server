@@ -26,7 +26,7 @@ public class JasperService {
     private static final String JASPER_PREFIXO = "relatorio_";
     private static final String JASPER_SUFIXO = ".jasper";
 
-    public byte[] exportarPDF(String backend, UUID relatorioId, RelatorioInputDto dto) throws IOException {
+    public byte[] exportarPDF(String backend, UUID relatorioId, RelatorioInputDto dto) throws IOException, IllegalAccessException {
         byte[] bytes = null;
         Relatorio relatorio = repository.findByIdAndAndBackend_Nome(relatorioId, backend)
                 .orElseThrow(() -> new EntidadeNaoEncontradaException("Relatorio não encontrado"));
@@ -38,13 +38,11 @@ public class JasperService {
         os.write(relatorio.getArquivo());
         os.close();
 
-        InputStream jasperFile = null;
-        try {
-            jasperFile = new FileInputStream(tempFile);
+        try (InputStream jasperFile = new FileInputStream(tempFile)) {
             JasperPrint print;
 
-            if (dto.getParameter_list().size() > 0) {
-                print = JasperFillManager.fillReport(jasperFile, dto.getParams(), new JRBeanCollectionDataSource(dto.getParameter_list()));
+            if (dto.getParameterList().size() > 0) {
+                print = JasperFillManager.fillReport(jasperFile, dto.getParams(), new JRBeanCollectionDataSource(dto.getParameterList()));
             } else {
                 print = JasperFillManager.fillReport(jasperFile, dto.getParams(), new JREmptyDataSource());
             }
@@ -53,7 +51,6 @@ public class JasperService {
         } catch (JRException e) {
             e.printStackTrace();
         } finally {
-            if (jasperFile != null) jasperFile.close();
             FileUtils.forceDelete(tempFile);
             FileUtils.deleteDirectory(tempDirectory.toFile());
         }

@@ -11,6 +11,6 @@ public class RelatorioInputDto {
 
     private Map<String, Object> params;
 
-    private List<Object> parameter_list = new ArrayList<>();
+    private List<Object> parameterList = new ArrayList<>();
 
 }
