@@ -11,6 +11,7 @@ import java.net.URI;
 public interface ApiService {
 
     @RequestLine("POST")
-    void sendReport(URI baseUri, @RequestBody SendRelatorioDto dto);
+    Object sendReport(URI baseUri,
+                    @RequestBody SendRelatorioDto dto);
 
 }

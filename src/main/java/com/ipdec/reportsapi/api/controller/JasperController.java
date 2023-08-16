@@ -2,9 +2,7 @@ package com.ipdec.reportsapi.api.controller;
 
 import com.ipdec.reportsapi.api.dto.RelatorioInputDto;
 import com.ipdec.reportsapi.domain.service.JasperService;
-import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -21,13 +19,9 @@ public class JasperController {
     @RequestMapping(method = RequestMethod.POST, value = "/{relatorioId}")
     public String exportarPdf(@RequestHeader String user,
                               @PathVariable UUID relatorioId,
-                              @RequestBody RelatorioInputDto dto,
-                              HttpServletResponse response) throws IOException, IllegalAccessException {
+                              @RequestBody RelatorioInputDto dto) throws IOException {
 
         byte[] bytes = service.exportarPDF(user, relatorioId, dto);
-//        response.setContentType(MediaType.APPLICATION_PDF_VALUE);
-//        response.setHeader("Content-disposition", "inline; filename=Recibo-" + "teste" + ".pdf");
-//        response.getOutputStream().write(bytes);
         byte[] encodedBytes = Base64.getEncoder().encode(bytes);
         return new String(encodedBytes);
     }

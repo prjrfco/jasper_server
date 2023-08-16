@@ -26,7 +26,7 @@ public class JasperService {
     private static final String JASPER_PREFIXO = "relatorio_";
     private static final String JASPER_SUFIXO = ".jasper";
 
-    public byte[] exportarPDF(String backend, UUID relatorioId, RelatorioInputDto dto) throws IOException, IllegalAccessException {
+    public byte[] exportarPDF(String backend, UUID relatorioId, RelatorioInputDto dto) throws IOException {
         byte[] bytes = null;
         Relatorio relatorio = repository.findByIdAndAndBackend_Nome(relatorioId, backend)
                 .orElseThrow(() -> new EntidadeNaoEncontradaException("Relatorio não encontrado"));

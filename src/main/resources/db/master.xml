@@ -17,4 +17,8 @@
         <sqlFile path="changelog/202307261159_create_table_historico.sql" relativeToChangelogFile="true"/>
     </changeSet>
 
+    <changeSet id="202308161554" author="francisco" dbms="postgresql">
+        <sqlFile path="changelog/202308161554_create_table_fila_envio.sql" relativeToChangelogFile="true"/>
+    </changeSet>
+
 </databaseChangeLog>

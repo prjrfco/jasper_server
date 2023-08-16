@@ -13,12 +13,8 @@ create table cadastro.backend
     descricao     text         not null,
     url           varchar(100) not null,
     senha         varchar(100) not null,
+    token_acesso  varchar(100),
     criado_em     TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     atualizado_em TIMESTAMP(0) WITHOUT TIME ZONE,
     primary key (id)
 );
-
-insert into cadastro.backend
-values (default, 'balandrau', 'API de gerenciamento marçônico balandrau', 'http://localhost:8081/relatorios',
-        '$2a$12$d7BerEyoctDTdugqhareC.ifjwUU3smFZWxKWHuZGLQICrDnerGdK', default,
-        null);

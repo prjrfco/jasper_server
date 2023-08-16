@@ -5,9 +5,11 @@ import com.ipdec.reportsapi.api.exceptionhandler.exception.EntidadeNaoEncontrada
 import com.ipdec.reportsapi.config.feignService.ApiService;
 import com.ipdec.reportsapi.config.feignService.SendRelatorioDto;
 import com.ipdec.reportsapi.domain.model.Backend;
+import com.ipdec.reportsapi.domain.model.FilaEnvio;
 import com.ipdec.reportsapi.domain.model.Historico;
 import com.ipdec.reportsapi.domain.model.Relatorio;
 import com.ipdec.reportsapi.domain.repository.BackendRepository;
+import com.ipdec.reportsapi.domain.repository.FilaEnvioRepository;
 import com.ipdec.reportsapi.domain.repository.RelatorioRepository;
 import feign.Feign;
 import feign.Target;
@@ -23,11 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @Import(FeignClientsConfiguration.class)
@@ -39,7 +37,11 @@ public class RelatorioService {
     @Autowired
     private BackendRepository backendRepository;
 
+    @Autowired
+    private FilaEnvioRepository filaEnvioRepository;
+
     ApiService apiService;
+
     @Autowired
     public void FeignDemoController(Decoder decoder, Encoder encoder) {
         apiService = Feign.builder().encoder(encoder).decoder(decoder)
@@ -60,7 +62,7 @@ public class RelatorioService {
     }
 
     @Transactional
-    public RelatorioDto create(MultipartFile file, UUID backendId) throws IOException, URISyntaxException {
+    public RelatorioDto create(MultipartFile file, UUID backendId) throws IOException {
         Backend backend = backendRepository.findById(backendId)
                 .orElseThrow(() -> new EntidadeNaoEncontradaException("Backend não encontrado"));
 
@@ -75,8 +77,12 @@ public class RelatorioService {
 
         relatorio = repository.save(relatorio);
 
-        //TODO: ADICIONAR CHAMADA PRA API DO BACKEND PARA REGISTRAR O NOVO RELATORIO
-        this.apiService.sendReport(new URI(backend.getUrl()), new SendRelatorioDto(relatorio));
+        try {
+            this.apiService.sendReport(new URI(backend.getUrl()), new SendRelatorioDto(relatorio));
+        } catch (Exception e) {
+            filaEnvioRepository.save(new FilaEnvio(relatorio));
+            e.printStackTrace();
+        }
 
         return new RelatorioDto(relatorio);
     }
@@ -95,8 +101,28 @@ public class RelatorioService {
         relatorio.setTipo(file.getContentType());
         relatorio.setVersao(relatorio.getVersao() + 1);
 
-        //TODO: ADICIONAR CHAMADA PRA API DO BACKEND PARA ATUALIZAR O RELATORIO
+        relatorio = repository.save(relatorio);
 
-        return new RelatorioDto(repository.save(relatorio));
+        Optional<FilaEnvio> presente = filaEnvioRepository.findByRelatorioId(relatorio.getId());
+
+        boolean erro = false;
+        try {
+            this.apiService.sendReport(new URI(relatorio.getBackend().getUrl()), new SendRelatorioDto(relatorio));
+        } catch (Exception e) {
+            erro = true;
+            if (presente.isEmpty()) {
+                presente = Optional.of(new FilaEnvio(relatorio));
+            } else {
+                presente.get().setCriadoEm(new Date());
+            }
+            filaEnvioRepository.save(presente.get());
+            e.printStackTrace();
+        }
+
+        if (presente.isPresent() && !erro) {
+            filaEnvioRepository.delete(presente.get());
+        }
+
+        return new RelatorioDto(relatorio);
     }
 }

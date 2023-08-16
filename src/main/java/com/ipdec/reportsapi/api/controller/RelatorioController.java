@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.List;
 import java.util.UUID;
 
@@ -34,7 +33,7 @@ public class RelatorioController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public RelatorioDto adicionar(@RequestParam UUID backendId,
-                                  @RequestParam("file") MultipartFile file) throws IOException, URISyntaxException {
+                                  @RequestParam("file") MultipartFile file) throws IOException {
         return service.create(file, backendId);
     }
 
