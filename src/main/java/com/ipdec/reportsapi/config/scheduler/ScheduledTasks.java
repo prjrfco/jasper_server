@@ -17,10 +17,10 @@ public class ScheduledTasks {
     @Autowired
     private ScheduleService service;
 
-    @Scheduled(fixedRate = 30000)
+    @Scheduled(fixedRate = 60000)
     public void filaRelatorios() {
         service.processarFila();
-        log.info("The time is now: " + new SimpleDateFormat("dd/MM/yyyy").format(new Date()));
+        log.info("PROCESSANDO FILA DE ENVIO DE RELATÓRIOS: " + new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date()));
     }
 
 }

@@ -52,6 +52,7 @@ public class Backend {
         this.descricao = dto.getDescricao();
         this.url = dto.getUrl();
         this.senha = new BCryptPasswordEncoder().encode(dto.getSenha());
+        this.tokenAcesso = dto.getTokenAcesso();
         this.criadoEm = new Date();
     }
 }

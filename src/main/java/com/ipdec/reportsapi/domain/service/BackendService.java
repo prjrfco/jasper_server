@@ -6,6 +6,7 @@ import com.ipdec.reportsapi.api.exceptionhandler.exception.EntidadeNaoEncontrada
 import com.ipdec.reportsapi.domain.model.Backend;
 import com.ipdec.reportsapi.domain.repository.BackendRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -48,7 +49,8 @@ public class BackendService {
         backend.setNome(dto.getNome());
         backend.setDescricao(dto.getDescricao());
         backend.setUrl(dto.getUrl());
-        backend.setSenha(dto.getSenha());
+        backend.setSenha(new BCryptPasswordEncoder().encode(dto.getSenha()));
+        backend.setTokenAcesso(dto.getTokenAcesso());
         backend.setAtualizadoEm(new Date());
 
         backend = repository.save(backend);
