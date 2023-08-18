@@ -1,6 +1,8 @@
 package com.ipdec.reportsapi.domain.service;
 
+import com.ipdec.reportsapi.api.dto.RelatorioDto;
 import com.ipdec.reportsapi.api.dto.RelatorioInputDto;
+import com.ipdec.reportsapi.api.dto.RelatorioListaDto;
 import com.ipdec.reportsapi.api.exceptionhandler.exception.EntidadeNaoEncontradaException;
 import com.ipdec.reportsapi.domain.model.Relatorio;
 import com.ipdec.reportsapi.domain.repository.RelatorioRepository;
@@ -14,7 +16,9 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class JasperService {
@@ -57,4 +61,10 @@ public class JasperService {
         return bytes;
     }
 
+    public List<RelatorioListaDto> consultarPdfs(String user) {
+        return repository.findAllByBackend_Nome(user)
+                .stream()
+                .map(RelatorioListaDto::new)
+                .collect(Collectors.toList());
+    }
 }

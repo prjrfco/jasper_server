@@ -16,4 +16,6 @@ public interface RelatorioRepository extends JpaRepository<Relatorio, Long> {
     Optional<Relatorio> findByIdAndAndBackend_Id(UUID relatorioId, UUID backendId);
 
     Optional<Relatorio> findByIdAndAndBackend_Nome(UUID relatorioId, String backendId);
+
+    List<Relatorio> findAllByBackend_Nome(String nome);
 }
