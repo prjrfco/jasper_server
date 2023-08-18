@@ -6,6 +6,7 @@ import com.ipdec.reportsapi.api.dto.RelatorioListaDto;
 import com.ipdec.reportsapi.api.exceptionhandler.exception.EntidadeNaoEncontradaException;
 import com.ipdec.reportsapi.domain.model.Relatorio;
 import com.ipdec.reportsapi.domain.repository.RelatorioRepository;
+import lombok.Synchronized;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import org.apache.tomcat.util.http.fileupload.FileUtils;
@@ -30,9 +31,10 @@ public class JasperService {
     private static final String JASPER_PREFIXO = "relatorio_";
     private static final String JASPER_SUFIXO = ".jasper";
 
-    public byte[] exportarPDF(String backend, UUID relatorioId, RelatorioInputDto dto) throws IOException {
+    @Synchronized
+    public byte[] exportarPDF(String backend, RelatorioInputDto dto) throws IOException {
         byte[] bytes = null;
-        Relatorio relatorio = repository.findByIdAndAndBackend_Nome(relatorioId, backend)
+        Relatorio relatorio = repository.findByNomeAndBackend_Nome(dto.getNome(), backend)
                 .orElseThrow(() -> new EntidadeNaoEncontradaException("Relatorio não encontrado"));
 
         Path tempDirectory = Files.createTempDirectory(Paths.get("target"), JASPER_DIRETORIO);

@@ -9,6 +9,8 @@ import java.util.Map;
 @Data
 public class RelatorioInputDto {
 
+    private String nome;
+
     private Map<String, Object> params;
 
     private List<Object> parameterList = new ArrayList<>();
