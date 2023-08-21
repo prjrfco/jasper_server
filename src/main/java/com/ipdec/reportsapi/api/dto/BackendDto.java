@@ -35,7 +35,6 @@ public class BackendDto {
         this.id = backend.getId();
         this.nome = backend.getNome();
         this.descricao = backend.getDescricao();
-        this.url = backend.getUrl();
         this.senha = backend.getSenha();
         this.criadoEm = backend.getCriadoEm();
         this.atualizadoEm = backend.getAtualizadoEm();

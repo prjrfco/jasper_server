@@ -11,7 +11,6 @@ create table cadastro.backend
     id            UUID                           DEFAULT uuid_generate_v4(),
     nome          varchar(100) not null unique,
     descricao     text         not null,
-    url           varchar(100) not null,
     senha         varchar(100) not null,
     token_acesso  varchar(100),
     criado_em     TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT CURRENT_TIMESTAMP,

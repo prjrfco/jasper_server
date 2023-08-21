@@ -26,9 +26,6 @@ public class Backend {
     @Column(name = "descricao")
     private String descricao;
 
-    @Column(name = "url")
-    private String url;
-
     @Column(name = "senha")
     private String senha;
 
@@ -50,7 +47,6 @@ public class Backend {
     public Backend(BackendInputDto dto) {
         this.nome = dto.getNome();
         this.descricao = dto.getDescricao();
-        this.url = dto.getUrl();
         this.senha = new BCryptPasswordEncoder().encode(dto.getSenha());
         this.tokenAcesso = dto.getTokenAcesso();
         this.criadoEm = new Date();

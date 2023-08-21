@@ -48,7 +48,6 @@ public class BackendService {
 
         backend.setNome(dto.getNome());
         backend.setDescricao(dto.getDescricao());
-        backend.setUrl(dto.getUrl());
         backend.setSenha(new BCryptPasswordEncoder().encode(dto.getSenha()));
         backend.setTokenAcesso(dto.getTokenAcesso());
         backend.setAtualizadoEm(new Date());
