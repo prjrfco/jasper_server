@@ -34,7 +34,7 @@ public class JasperService {
     @Synchronized
     public byte[] exportarPDF(String backend, RelatorioInputDto dto) throws IOException {
         byte[] bytes = null;
-        Relatorio relatorio = repository.findByNomeAndBackend_Nome(dto.getNome(), backend)
+        Relatorio relatorio = repository.findByNomeAndBackend_Nome(dto.getNome()+JASPER_SUFIXO, backend)
                 .orElseThrow(() -> new EntidadeNaoEncontradaException("Relatorio não encontrado"));
 
         Path tempDirectory = Files.createTempDirectory(Paths.get("target"), JASPER_DIRETORIO);
