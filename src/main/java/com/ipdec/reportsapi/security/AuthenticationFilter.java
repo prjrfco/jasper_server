@@ -1,4 +1,4 @@
-package com.ipdec.reportsapi.config;
+package com.ipdec.reportsapi.security;
 
 import com.ipdec.reportsapi.api.exceptionhandler.exception.AutenticacaoException;
 import com.ipdec.reportsapi.domain.model.Backend;
@@ -49,7 +49,6 @@ public class AuthenticationFilter extends OncePerRequestFilter {
                 }
             }
         }
-
 
         filterChain.doFilter(request, response);
     }

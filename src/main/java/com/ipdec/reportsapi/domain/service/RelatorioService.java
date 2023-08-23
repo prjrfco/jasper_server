@@ -2,16 +2,11 @@ package com.ipdec.reportsapi.domain.service;
 
 import com.ipdec.reportsapi.api.dto.RelatorioDto;
 import com.ipdec.reportsapi.api.exceptionhandler.exception.EntidadeNaoEncontradaException;
-import com.ipdec.reportsapi.config.feignService.ApiService;
 import com.ipdec.reportsapi.domain.model.Backend;
 import com.ipdec.reportsapi.domain.model.Historico;
 import com.ipdec.reportsapi.domain.model.Relatorio;
 import com.ipdec.reportsapi.domain.repository.BackendRepository;
 import com.ipdec.reportsapi.domain.repository.RelatorioRepository;
-import feign.Feign;
-import feign.Target;
-import feign.codec.Decoder;
-import feign.codec.Encoder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.openfeign.FeignClientsConfiguration;
 import org.springframework.context.annotation.Import;
@@ -35,14 +30,6 @@ public class RelatorioService {
 
     @Autowired
     private BackendRepository backendRepository;
-
-    ApiService apiService;
-
-    @Autowired
-    public void FeignDemoController(Decoder decoder, Encoder encoder) {
-        apiService = Feign.builder().encoder(encoder).decoder(decoder)
-                .target(Target.EmptyTarget.create(ApiService.class));
-    }
 
     public List<RelatorioDto> listar(UUID id) {
         List<Relatorio> lista = repository.findAllByBackendId(id);
