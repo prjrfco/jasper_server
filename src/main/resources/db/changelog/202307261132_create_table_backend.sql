@@ -12,7 +12,6 @@ create table cadastro.backend
     nome          varchar(100) not null unique,
     descricao     text         not null,
     senha         varchar(100) not null,
-    token_acesso  varchar(100),
     criado_em     TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     atualizado_em TIMESTAMP(0) WITHOUT TIME ZONE,
     primary key (id)

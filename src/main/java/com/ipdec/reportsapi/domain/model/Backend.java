@@ -29,9 +29,6 @@ public class Backend {
     @Column(name = "senha")
     private String senha;
 
-    @Column(name = "token_acesso")
-    private String tokenAcesso;
-
     @OneToMany(mappedBy = "backend")
     private List<Relatorio> relatorios = new ArrayList<>();
 
@@ -48,7 +45,6 @@ public class Backend {
         this.nome = dto.getNome();
         this.descricao = dto.getDescricao();
         this.senha = new BCryptPasswordEncoder().encode(dto.getSenha());
-        this.tokenAcesso = dto.getTokenAcesso();
         this.criadoEm = new Date();
     }
 }
