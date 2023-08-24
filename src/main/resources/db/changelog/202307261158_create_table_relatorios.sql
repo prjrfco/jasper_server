@@ -12,5 +12,6 @@ create table cadastro.relatorio
     versao        integer default 1,
     criado_em     TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     atualizado_em TIMESTAMP(0) WITHOUT TIME ZONE,
+    UNIQUE (backend_id, nome),
     primary key (id)
 );

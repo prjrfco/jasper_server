@@ -11,6 +11,8 @@ import java.util.UUID;
 @Repository
 public interface RelatorioRepository extends JpaRepository<Relatorio, Long> {
 
+    Optional<Relatorio> findByNomeAndBackendId(String nomem, UUID uuid);
+
     List<Relatorio> findAllByBackendId(UUID backendId);
 
     Optional<Relatorio> findByIdAndAndBackend_Id(UUID relatorioId, UUID backendId);
