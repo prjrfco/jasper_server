@@ -68,11 +68,11 @@ public class RelatorioService {
     public RelatorioDto atualizar(UUID backendId, UUID relatorioId, MultipartFile file) throws IOException {
         String fileName = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
 
-        Relatorio relatorio = repository.findByIdAndAndBackend_Id(relatorioId, backendId
-        ).orElseThrow(() -> new EntidadeNaoEncontradaException("Relatório não encontrado"));
+        Relatorio relatorio = repository.findByIdAndAndBackend_Id(relatorioId, backendId)
+                .orElseThrow(() -> new EntidadeNaoEncontradaException("Relatório não encontrado"));
 
         Optional<Relatorio> relatorioExistente = repository.findByNomeAndBackendId(fileName, backendId);
-        if (relatorioExistente.isPresent() && relatorioExistente.get().getId() != relatorio.getId()) {
+        if (relatorioExistente.isPresent() && !relatorioExistente.get().getId().equals(relatorio.getId())) {
             throw new NegocioException("Nome em uso por outro relatório neste backend");
         }
 

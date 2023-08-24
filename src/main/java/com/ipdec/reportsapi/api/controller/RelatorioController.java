@@ -46,7 +46,7 @@ public class RelatorioController {
     @DeleteMapping("/{relatorioId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deletar(@RequestParam UUID backendId,
-                        @PathVariable UUID id) {
-        service.deletar(backendId, id);
+                        @PathVariable UUID relatorioId) {
+        service.deletar(backendId, relatorioId);
     }
 }
